@@ -25,23 +25,3 @@ The backend of Cwtwo handles all the server-side logic and database interactions
 **Repository:** [CWTwo_Backend Repository](https://github.com/akshaykrishnam80/CWTwo_Backend)
 
 In the backend repository, you'll find the code for server setup, API endpoints, database connections, and other backend functionalities.
-
-## Getting Started
-
-To get started with these projects, you'll need to clone each repository and follow the setup instructions provided in their respective README files.
-
-For the frontend, you can view it directly via GitHub Pages, or you can clone the repository and run it locally for development and testing purposes.
-
-For the backend, after cloning the repository, you'll need to set up the necessary environment and dependencies to run the server locally or deploy it to a server of your choice.
-
-## Contributing
-
-Contributions to both the frontend and backend of Cwtwo are welcome! Whether it's bug fixes, feature additions, or improvements in documentation, your help is appreciated. Please read the CONTRIBUTING.md file in each repository for instructions on how to contribute.
-
-## License
-
-This project is licensed under the [MIT License](LICENSE.md). Feel free to fork the repositories and use them as per the license guidelines.
-
----
-
-Thank you for visiting the Cwtwo project repositories! Your support and contributions are what make this project grow and improve.
