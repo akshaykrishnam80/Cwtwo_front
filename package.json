@@ -1,0 +1,32 @@
+{
+  "name": "cwtwo",
+  "version": "1.0.0",
+  "description": "M00793305\r # Name\r Akshay Madhusudhanan",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/akshaykrishnam80/CWTwo_Backend.git"
+  },
+  "keywords": [
+    "backend;",
+    "express",
+    "api"
+  ],
+  "author": "Akshay",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/akshaykrishnam80/CWTwo_Backend/issues"
+  },
+  "homepage": "https://github.com/akshaykrishnam80/CWTwo_Backend#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "fs": "^0.0.1-security",
+    "mongodb": "^6.3.0",
+    "morgan": "^1.10.0",
+    "nodemon": "^3.0.3"
+  }
+}
