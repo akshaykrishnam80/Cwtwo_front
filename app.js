@@ -11,6 +11,10 @@ const cors = require('cors');
 
 app.use(cors());
 
+app.get('/',(req,res)=>{
+res.send("HI");
+});
+
 
 const port = process.env.PORT || 3000;
 app.listen(port, function () {
