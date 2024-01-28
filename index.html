@@ -87,7 +87,6 @@
                     <button @click="sortByPrice" class="btn btn-dark mt-2">Sort By Price</button>
                 </div>
 
-
                 <div class="row">
 
                     <div v-for="item in items" :key="item.id" class="col-md-3 col-sm-6">
@@ -133,7 +132,6 @@
                         </div>
                     </li>
                 </ul>
-
 
 
                 <div class="input-group input-group-md mb-3 mt-3">
@@ -186,68 +184,65 @@
                 this.loadLessons();
             },
             methods: {
-                //             checkout() {
-                //     let checkoutData = {
-                //         Name: this.user_details.name,
-                //         Phone: this.user_details.phone_number,
-                //         Items: this.basket.map(item => ({
-                //             item_name: item.item_name,
-                //             price: item.price,
-                //         }))
-                //     };
 
-                //     console.log("Checkout Data:", checkoutData);
-                // },
+
                 checkout() {
-                    // Assuming checkoutData is the data object you want to send
+
                     const checkoutData = {
                         Name: this.user_details.name,
                         Phone: this.user_details.phone_number,
                         Items: this.basket.map(item => ({
-                            id:item.id,
+                            id: item.id,
                             item_name: item.item_name,
                             price: item.price,
                             quantity: item.quantity
                         }))
                     };
 
-                    fetch('https://cwbackend-env.eba-xdfmup6p.eu-north-1.elasticbeanstalk.com//order', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(checkoutData)
-})
-.then(response => response.json())
-.then(data => {
-    console.log('Success:', data);
-    // Handle success (e.g., showing a success message)
+                    fetch('https://cwbackend-env.eba-xdfmup6p.eu-north-1.elasticbeanstalk.com/order', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(checkoutData)
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log('Success:', data);
 
-    // Iterate over the items in checkoutData
-    checkoutData.Items.forEach(item => {
-        const url = `http://cwbackend-env.eba-xdfmup6p.eu-north-1.elasticbeanstalk.com/lesson/${item.id}`; // Construct the URL with the item's ID
-        fetch(url, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(item) // Send item data
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log(`Success for item ${item.id}:`, data);
-            // Handle success for each item
-        })
-        .catch(error => {
-            console.error(`Error for item ${item.id}:`, error);
-            // Handle errors for each item
-        });
-    });
-})
-.catch(error => {
-    console.error('Error:', error);
-    // Handle errors for the POST request
-});
+                            checkoutData.Items.forEach(item => {
+                                const url = `https://cwbackend-env.eba-xdfmup6p.eu-north-1.elasticbeanstalk.com/lesson/${item.id}`;
+                                fetch(url, {
+                                    method: 'PUT',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify(item)
+                                })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        console.log(`Success for item ${item.id}:`, data);
+
+                                    })
+                                    .catch(error => {
+                                        console.error(`Error for item ${item.id}:`, error);
+
+                                    });
+                            });
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+
+                        });
+
+                    //checkoutData = [];
+                    this.items = [];
+                    this.basket = [];
+                    this.user_details = [{
+                        name: "",
+                        phone_number: ""
+                    }];
+                    this.basketVisibility = !this.basketVisibility
 
 
                 },
@@ -271,23 +266,39 @@
                     this.basketVisibility = !this.basketVisibility;
                 },
                 onKeyUp() {
-                    this.searchResults = this.items.filter(item =>
-                        item.item_name.toLowerCase().includes(this.search.toLowerCase())
-                    );
-                    this.showSearchResults = this.searchResults.length > 0 && this.search.trim() !== '';
-
-                    this.itemsToShow = this.showSearchResults ? this.searchResults : this.items;
-                },
+            // Trigger a GET request to the search endpoint
+            const searchQuery = this.search.trim();
+            if (searchQuery) {
+                fetch(`https://cwbackend-env.eba-xdfmup6p.eu-north-1.elasticbeanstalk.com/search/${searchQuery}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        this.searchResults = data;
+                        this.showSearchResults = true;
+                    })
+                    .catch(error => {
+                        console.error('Error during search:', error);
+                        this.showSearchResults = false;
+                    });
+            } else {
+                this.searchResults = [];
+                this.showSearchResults = false;
+            }
+        },
                 AddToBasket(item) {
-                    // Find item By ID
+
                     const itmIndex = this.basket.findIndex(basketItem => basketItem.id === item.id);
 
-                    // get total availability
+
                     const CheckItemQty = this.items.findIndex(i => i.id === item.id);
-                    // check if same item in basket
+
                     if (CheckItemQty !== -1 && this.items[CheckItemQty].qty > 0) {
                         if (itmIndex !== -1) {
-                            // Item is already in basket, add qty
+
                             this.basket[itmIndex].quantity++;
                         } else {
                             this.basket.push({
@@ -302,19 +313,19 @@
                     }
                 },
                 deductItemQty(item) {
-                    // Find itemm By ID
+
                     const itmIndex = this.basket.findIndex(basketItem => basketItem.id === item.id);
 
-                    // reduce Qty from basket // > increase qty in items
+
                     if (itmIndex !== -1) {
-                        // Reduce quantity From basket 
+
                         if (this.basket[itmIndex].quantity > 1) {
                             this.basket[itmIndex].quantity--;
                         } else {
-                            // If 0, remove item from basket
+
                             this.basket.splice(itmIndex, 1);
                         }
-                        // Increase the availability
+
                         const CheckItemQty = this.items.findIndex(i => i.id === item.id);
                         this.items[CheckItemQty].qty++;
 
@@ -322,14 +333,14 @@
                     }
                 },
                 removeItem(item) {
-                    // Find the index of the item in the basket array
+
                     const itmIndex = this.basket.findIndex(basketItem => basketItem.id === item.id);
 
-                    // Increase the availability
+
                     const CheckItemQty = this.items.findIndex(i => i.id === item.id);
                     this.items[CheckItemQty].qty += this.basket[itmIndex].quantity;
 
-                    // Remove the selected item from the basket
+
                     this.basket.splice(itmIndex, 1);
 
                     console.log(`Removed ${item.item_name} from the basket.`);
@@ -369,7 +380,7 @@
             },
             watch: {
                 sortOrder: function (newSortOrder) {
-                    // Watch for changes in sortOrder and trigger sorting
+
                     this.sortItems(this.sortBy);
                 },
             },
