@@ -10,7 +10,6 @@
 
     <script src="js/bootstrap.bundle.js"></script>
     <script src="js/vue-v2.js"></script>
-    <script src="js/items.js"></script>
 </head>
 <body>
     <div id="VueApp">
@@ -141,6 +140,9 @@
                 <h4>Your name: {{ user_details.name }}</h4>
                 <h4>Your number: {{ user_details.phone_number }}</h4>
             </div>
+            <!-- Inside your basket section, after displaying user details -->
+<button class="btn btn-success mt-3" @click="checkout">Checkout</button>
+
 
         </div>
     </div>
@@ -160,7 +162,7 @@
                 search: '',
                 searchResults: [],
                 showSearchResults: false,
-                items: Items, 
+                items: [], 
                 basket: [],
                 user_details: [ {
                     name: "",
@@ -168,7 +170,66 @@
                 } ],
                 
             },
+            mounted() {
+    this.loadLessons();
+},
             methods: {
+    //             checkout() {
+    //     let checkoutData = {
+    //         Name: this.user_details.name,
+    //         Phone: this.user_details.phone_number,
+    //         Items: this.basket.map(item => ({
+    //             item_name: item.item_name,
+    //             price: item.price,
+    //         }))
+    //     };
+
+    //     console.log("Checkout Data:", checkoutData);
+    // },
+    checkout() {
+        // Assuming checkoutData is the data object you want to send
+        const checkoutData = {
+            Name: this.user_details.name,
+            Phone: this.user_details.phone_number,
+            Items: this.basket.map(item => ({
+                item_name: item.item_name,
+                price: item.price,
+                quantity: item.quantity
+            }))
+        };
+
+        fetch('http://localhost:3000/order', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(checkoutData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            // Handle success (e.g., showing a success message)
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            // Handle errors (e.g., displaying an error message)
+        });
+    },
+    loadLessons() {
+        fetch('http://localhost:3000/collection/lessons')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                this.items = data;
+            })
+            .catch(error => {
+                console.error('There has been a problem with your fetch operation:', error);
+            });
+    },
                 toggleVisibility() {
                     this.basketVisibility = !this.basketVisibility;
                 },
