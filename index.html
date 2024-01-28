@@ -1,4 +1,5 @@
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,147 +12,158 @@
     <script src="js/bootstrap.bundle.js"></script>
     <script src="js/vue-v2.js"></script>
 </head>
+
 <body>
     <div id="VueApp">
-    <nav class="navbar navbar-expand-lg bg-dark border-bottom border-body" data-bs-theme="dark">
-    <div class="container">
-        <a class="navbar-brand" href="index.html">{{ sitename }}</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="index.html">Home</a>
-            </li>
-           
-        </ul>
-        <form class="d-flex " role="search">
-            <input class="form-control me-2 mt-3" type="search" placeholder="Search" aria-label="Search" v-model="search" @keyup="onKeyUp">
-            <button class="btn btn-outline-light mt-3" style="margin-right: 10px;" type="submit">Search</button>
-        </form>
-        
-        <button v-on:click="toggleVisibility" class="btn btn-primary btn-outline-light" :disabled="BasketHasNothing">Basket</button>
+        <nav class="navbar navbar-expand-lg bg-dark border-bottom border-body" data-bs-theme="dark">
+            <div class="container">
+                <a class="navbar-brand" href="index.html">{{ sitename }}</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="index.html">Home</a>
+                        </li>
 
-       
-        </div>
-    </div>
-    </nav>
+                    </ul>
+                    <form class="d-flex " role="search">
+                        <input class="form-control me-2 mt-3" type="search" placeholder="Search" aria-label="Search"
+                            v-model="search" @keyup="onKeyUp">
+                        <button class="btn btn-outline-light mt-3" style="margin-right: 10px;"
+                            type="submit">Search</button>
+                    </form>
+
+                    <button v-on:click="toggleVisibility" class="btn btn-primary btn-outline-light"
+                        :disabled="BasketHasNothing">Basket</button>
 
 
-    <div v-if="showSearchResults" class="container mt-4">
-        <h3 class="text-center">Search Results</h3>
-
-        <div v-for="result in searchResults" :key="result.id" class="col-md-3 col-sm-6 float-start">
-            <div class="card mt-3" style="width: 100%;">
-                <img :src="result.item_image" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <span class="float-start">{{ result.item_name }}</span>
-                        <span class="float-end">£{{ result.price }}</span>
-                    </h5>
-                    <div class="clearfix"></div>
-                    <p class="card-text">{{ result.location }}</p>
-                    <button class="btn btn-dark full-width mt-1" @click="AddToBasket(result)">Add to Basket</button>
                 </div>
             </div>
-            
-        </div>
-        <div class="clearfix"></div>
-    </div>
+        </nav>
 
 
-    <div class="items-area"  v-if="basketVisibility">
-        <div class="container">
-            <h3 class="text-center pt-3">Items Showcase</h3>
-            
-            
-            <div class="text-center">
-                <label for="sortOrder">Sort Order:</label><br>
-                <select v-model="sortOrder" @change="sortItems" class="form-select">
-                    <option value="asc">Ascending</option>
-                    <option value="desc">Descending</option>
-                </select>
-                
-                                
-                <button @click="sortByName" class="btn btn-dark mt-2">Sort By Name</button>
-                <button @click="sortByLocation" class="btn btn-dark mt-2">Sort By Location</button>
-                <button @click="sortByQty" class="btn btn-dark mt-2">Sort By Quantity</button>
-                <button @click="sortByPrice" class="btn btn-dark mt-2">Sort By Price</button>
+        <div v-if="showSearchResults" class="container mt-4">
+            <h3 class="text-center">Search Results</h3>
+
+            <div v-for="result in searchResults" :key="result.id" class="col-md-3 col-sm-6 float-start">
+                <div class="card mt-3" style="width: 100%;">
+                    <img :src="result.item_image" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <span class="float-start">{{ result.item_name }}</span>
+                            <span class="float-end">£{{ result.price }}</span>
+                        </h5>
+                        <div class="clearfix"></div>
+                        <p class="card-text">{{ result.location }}</p>
+                        <button class="btn btn-dark full-width mt-1" @click="AddToBasket(result)">Add to Basket</button>
+                    </div>
+                </div>
+
             </div>
-            
+            <div class="clearfix"></div>
+        </div>
 
-            <div class="row">
 
-                <div v-for="item in items" :key="item.id" class="col-md-3 col-sm-6">
-                    <div class="card mt-3" style="width: 100%;">
-                        <img :src="item.item_image" class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title">
-                                <span class="float-start">{{ item.item_name }}</span>
-                                <span class="float-end">£{{ item.price }}</span>
-                            </h5>
-                            <div class="clearfix"></div>
-                            <p class="card-text mt-1">Location:<b> {{ item.location }}</b> <br>Quantity: <b>{{ item.qty }}</b></p>
-                                                        
-                            <button class="btn btn-dark full-width mt-1" :disabled="item.qty === 0" @click="AddToBasket(item)">Add to Basket</button>
-                            
+        <div class="items-area" v-if="basketVisibility">
+            <div class="container">
+                <h3 class="text-center pt-3">Items Showcase</h3>
+
+
+                <div class="text-center">
+                    <label for="sortOrder">Sort Order:</label><br>
+                    <select v-model="sortOrder" @change="sortItems" class="form-select">
+                        <option value="asc">Ascending</option>
+                        <option value="desc">Descending</option>
+                    </select>
+
+
+                    <button @click="sortByName" class="btn btn-dark mt-2">Sort By Name</button>
+                    <button @click="sortByLocation" class="btn btn-dark mt-2">Sort By Location</button>
+                    <button @click="sortByQty" class="btn btn-dark mt-2">Sort By Quantity</button>
+                    <button @click="sortByPrice" class="btn btn-dark mt-2">Sort By Price</button>
+                </div>
+
+
+                <div class="row">
+
+                    <div v-for="item in items" :key="item.id" class="col-md-3 col-sm-6">
+                        <div class="card mt-3" style="width: 100%;">
+                            <img :src="item.item_image" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <span class="float-start">{{ item.item_name }}</span>
+                                    <span class="float-end">£{{ item.price }}</span>
+                                </h5>
+                                <div class="clearfix"></div>
+                                <p class="card-text mt-1">Location:<b> {{ item.location }}</b> <br>Quantity: <b>{{
+                                        item.qty }}</b></p>
+
+                                <button class="btn btn-dark full-width mt-1" :disabled="item.qty === 0"
+                                    @click="AddToBasket(item)">Add to Basket</button>
+
+                            </div>
                         </div>
                     </div>
+
+
+                </div>
+            </div>
+        </div>
+        <div v-else>
+            <div class="container">
+                <h3 class="text-center pt-3">Basket</h3>
+
+
+                <ul class="list-group">
+                    <li class="list-group-item" v-for="item in basket" :key="item.id">
+                        <div class="float-start">
+                            <img :src="item.item_image" style="width: 100px;">
+                        </div>
+
+                        <div class="float-start " style="margin-left: 10px;">
+                            <h3 style="padding:0;">{{ item.item_name }}</h3>
+                            <b>Price: £{{ item.price }}</b> <br> <b>Quantity: {{ item.quantity }}</b>
+                            <button class="btn btn-warning btn-sm ms-2" @click="deductItemQty(item)">Remove
+                                Quantity</button>
+                            <button class="btn btn-danger btn-sm ms-2" @click="removeItem(item)">Remove Item</button>
+                        </div>
+                    </li>
+                </ul>
+
+
+
+                <div class="input-group input-group-md mb-3 mt-3">
+                    <span class="input-group-text bg-dark text-light" id="inputGroup-sizing-sm">Your Name</span>
+                    <input type="text" class="form-control" v-model="user_details.name"
+                        aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
                 </div>
 
+                <div class="input-group input-group-md mb-3">
+                    <span class="input-group-text bg-dark text-light" id="inputGroup-sizing-sm">Your Contact No.</span>
+                    <input type="number" class="form-control" v-model="user_details.phone_number"
+                        aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                </div>
+
+                <div class="bg-light">
+                    <h4>Your name: {{ user_details.name }}</h4>
+                    <h4>Your number: {{ user_details.phone_number }}</h4>
+                </div>
+                <!-- Inside your basket section, after displaying user details -->
+                <button class="btn btn-success mt-3" @click="checkout">Checkout</button>
+
 
             </div>
         </div>
+
+        <hr>
+        <h5 class="text-center">{{ sitename }} - CST3145 CW1</h5>
     </div>
-    <div v-else>
-        <div class="container">
-            <h3 class="text-center pt-3">Basket</h3>
-            
-
-            <ul class="list-group">
-                <li class="list-group-item" v-for="item in basket" :key="item.id">
-                    <div class="float-start">
-                        <img :src="item.item_image" style="width: 100px;">
-                    </div>
-                    
-                    <div class="float-start " style="margin-left: 10px;">
-                        <h3 style="padding:0;">{{ item.item_name }}</h3>
-                        <b>Price: £{{ item.price }}</b> <br> <b>Quantity: {{ item.quantity }}</b>
-                        <button class="btn btn-warning btn-sm ms-2" @click="deductItemQty(item)">Remove Quantity</button>
-                        <button class="btn btn-danger btn-sm ms-2" @click="removeItem(item)">Remove Item</button>
-                    </div>
-                </li>
-            </ul>
-
-           
-
-            <div class="input-group input-group-md mb-3 mt-3">
-                <span class="input-group-text bg-dark text-light" id="inputGroup-sizing-sm">Your Name</span>
-                <input type="text" class="form-control" v-model="user_details.name" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
-            </div>
-
-            <div class="input-group input-group-md mb-3">
-                <span class="input-group-text bg-dark text-light" id="inputGroup-sizing-sm">Your Contact No.</span>
-                <input type="number" class="form-control" v-model="user_details.phone_number" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
-            </div>
-            
-            <div class="bg-light">
-                <h4>Your name: {{ user_details.name }}</h4>
-                <h4>Your number: {{ user_details.phone_number }}</h4>
-            </div>
-            <!-- Inside your basket section, after displaying user details -->
-<button class="btn btn-success mt-3" @click="checkout">Checkout</button>
-
-
-        </div>
-    </div>
-
-    <hr>
-    <h5 class="text-center">{{ sitename }} - CST3145 CW1</h5>
-    </div>
-<script>
-    let VueApp = new Vue({
+    <script>
+        let VueApp = new Vue({
             el: '#VueApp',
             data: {
                 sitename: 'After School Vue App',
@@ -162,81 +174,106 @@
                 search: '',
                 searchResults: [],
                 showSearchResults: false,
-                items: [], 
+                items: [],
                 basket: [],
-                user_details: [ {
+                user_details: [{
                     name: "",
                     phone_number: ""
-                } ],
-                
+                }],
+
             },
             mounted() {
-    this.loadLessons();
-},
+                this.loadLessons();
+            },
             methods: {
-    //             checkout() {
-    //     let checkoutData = {
-    //         Name: this.user_details.name,
-    //         Phone: this.user_details.phone_number,
-    //         Items: this.basket.map(item => ({
-    //             item_name: item.item_name,
-    //             price: item.price,
-    //         }))
-    //     };
+                //             checkout() {
+                //     let checkoutData = {
+                //         Name: this.user_details.name,
+                //         Phone: this.user_details.phone_number,
+                //         Items: this.basket.map(item => ({
+                //             item_name: item.item_name,
+                //             price: item.price,
+                //         }))
+                //     };
 
-    //     console.log("Checkout Data:", checkoutData);
-    // },
-    checkout() {
-        // Assuming checkoutData is the data object you want to send
-        const checkoutData = {
-            Name: this.user_details.name,
-            Phone: this.user_details.phone_number,
-            Items: this.basket.map(item => ({
-                item_name: item.item_name,
-                price: item.price,
-                quantity: item.quantity
-            }))
-        };
+                //     console.log("Checkout Data:", checkoutData);
+                // },
+                checkout() {
+                    // Assuming checkoutData is the data object you want to send
+                    const checkoutData = {
+                        Name: this.user_details.name,
+                        Phone: this.user_details.phone_number,
+                        Items: this.basket.map(item => ({
+                            id:item.id,
+                            item_name: item.item_name,
+                            price: item.price,
+                            quantity: item.quantity
+                        }))
+                    };
 
-        fetch('http://localhost:3000/order', {
-            method: 'POST',
+                    fetch('https://cwbackend-env.eba-xdfmup6p.eu-north-1.elasticbeanstalk.com//order', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(checkoutData)
+})
+.then(response => response.json())
+.then(data => {
+    console.log('Success:', data);
+    // Handle success (e.g., showing a success message)
+
+    // Iterate over the items in checkoutData
+    checkoutData.Items.forEach(item => {
+        const url = `http://cwbackend-env.eba-xdfmup6p.eu-north-1.elasticbeanstalk.com/lesson/${item.id}`; // Construct the URL with the item's ID
+        fetch(url, {
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(checkoutData)
+            body: JSON.stringify(item) // Send item data
         })
         .then(response => response.json())
         .then(data => {
-            console.log('Success:', data);
-            // Handle success (e.g., showing a success message)
+            console.log(`Success for item ${item.id}:`, data);
+            // Handle success for each item
         })
-        .catch((error) => {
-            console.error('Error:', error);
-            // Handle errors (e.g., displaying an error message)
+        .catch(error => {
+            console.error(`Error for item ${item.id}:`, error);
+            // Handle errors for each item
         });
-    },
-    loadLessons() {
-        fetch('http://localhost:3000/collection/lessons')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                this.items = data;
-            })
-            .catch(error => {
-                console.error('There has been a problem with your fetch operation:', error);
-            });
-    },
+    });
+})
+.catch(error => {
+    console.error('Error:', error);
+    // Handle errors for the POST request
+});
+
+
+                },
+
+                loadLessons() {
+                    fetch('https://cwbackend-env.eba-xdfmup6p.eu-north-1.elasticbeanstalk.com/collection/lessons')
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            this.items = data;
+                        })
+                        .catch(error => {
+                            console.error('There has been a problem with your fetch operation:', error);
+                        });
+                },
                 toggleVisibility() {
                     this.basketVisibility = !this.basketVisibility;
                 },
                 onKeyUp() {
                     this.searchResults = this.items.filter(item =>
-                    item.item_name.toLowerCase().includes(this.search.toLowerCase())
-                );
+                        item.item_name.toLowerCase().includes(this.search.toLowerCase())
+                    );
                     this.showSearchResults = this.searchResults.length > 0 && this.search.trim() !== '';
 
                     this.itemsToShow = this.showSearchResults ? this.searchResults : this.items;
@@ -245,9 +282,9 @@
                     // Find item By ID
                     const itmIndex = this.basket.findIndex(basketItem => basketItem.id === item.id);
 
-                        // get total availability
+                    // get total availability
                     const CheckItemQty = this.items.findIndex(i => i.id === item.id);
-                        // check if same item in basket
+                    // check if same item in basket
                     if (CheckItemQty !== -1 && this.items[CheckItemQty].qty > 0) {
                         if (itmIndex !== -1) {
                             // Item is already in basket, add qty
@@ -331,7 +368,7 @@
                 },
             },
             watch: {
-                sortOrder: function(newSortOrder) {
+                sortOrder: function (newSortOrder) {
                     // Watch for changes in sortOrder and trigger sorting
                     this.sortItems(this.sortBy);
                 },
@@ -342,6 +379,7 @@
                 },
             },
         });
-</script>
+    </script>
 </body>
+
 </html>
