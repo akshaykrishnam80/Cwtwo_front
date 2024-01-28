@@ -1,0 +1,286 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>After School Vue App - CST3145 CW1</title>
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/stylesheet.css">
+
+    <script src="js/bootstrap.bundle.js"></script>
+    <script src="js/vue-v2.js"></script>
+    <script src="js/items.js"></script>
+</head>
+<body>
+    <div id="VueApp">
+    <nav class="navbar navbar-expand-lg bg-dark border-bottom border-body" data-bs-theme="dark">
+    <div class="container">
+        <a class="navbar-brand" href="index.html">{{ sitename }}</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="index.html">Home</a>
+            </li>
+           
+        </ul>
+        <form class="d-flex " role="search">
+            <input class="form-control me-2 mt-3" type="search" placeholder="Search" aria-label="Search" v-model="search" @keyup="onKeyUp">
+            <button class="btn btn-outline-light mt-3" style="margin-right: 10px;" type="submit">Search</button>
+        </form>
+        
+        <button v-on:click="toggleVisibility" class="btn btn-primary btn-outline-light" :disabled="BasketHasNothing">Basket</button>
+
+       
+        </div>
+    </div>
+    </nav>
+
+
+    <div v-if="showSearchResults" class="container mt-4">
+        <h3 class="text-center">Search Results</h3>
+
+        <div v-for="result in searchResults" :key="result.id" class="col-md-3 col-sm-6 float-start">
+            <div class="card mt-3" style="width: 100%;">
+                <img :src="result.item_image" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <span class="float-start">{{ result.item_name }}</span>
+                        <span class="float-end">£{{ result.price }}</span>
+                    </h5>
+                    <div class="clearfix"></div>
+                    <p class="card-text">{{ result.location }}</p>
+                    <button class="btn btn-dark full-width mt-1" @click="AddToBasket(result)">Add to Basket</button>
+                </div>
+            </div>
+            
+        </div>
+        <div class="clearfix"></div>
+    </div>
+
+
+    <div class="items-area"  v-if="basketVisibility">
+        <div class="container">
+            <h3 class="text-center pt-3">Items Showcase</h3>
+            
+            
+            <div class="text-center">
+                <label for="sortOrder">Sort Order:</label><br>
+                <select v-model="sortOrder" @change="sortItems" class="form-select">
+                    <option value="asc">Ascending</option>
+                    <option value="desc">Descending</option>
+                </select>
+                
+                                
+                <button @click="sortByName" class="btn btn-dark mt-2">Sort By Name</button>
+                <button @click="sortByLocation" class="btn btn-dark mt-2">Sort By Location</button>
+                <button @click="sortByQty" class="btn btn-dark mt-2">Sort By Quantity</button>
+                <button @click="sortByPrice" class="btn btn-dark mt-2">Sort By Price</button>
+            </div>
+            
+
+            <div class="row">
+
+                <div v-for="item in items" :key="item.id" class="col-md-3 col-sm-6">
+                    <div class="card mt-3" style="width: 100%;">
+                        <img :src="item.item_image" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <span class="float-start">{{ item.item_name }}</span>
+                                <span class="float-end">£{{ item.price }}</span>
+                            </h5>
+                            <div class="clearfix"></div>
+                            <p class="card-text mt-1">Location:<b> {{ item.location }}</b> <br>Quantity: <b>{{ item.qty }}</b></p>
+                                                        
+                            <button class="btn btn-dark full-width mt-1" :disabled="item.qty === 0" @click="AddToBasket(item)">Add to Basket</button>
+                            
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    <div v-else>
+        <div class="container">
+            <h3 class="text-center pt-3">Basket</h3>
+            
+
+            <ul class="list-group">
+                <li class="list-group-item" v-for="item in basket" :key="item.id">
+                    <div class="float-start">
+                        <img :src="item.item_image" style="width: 100px;">
+                    </div>
+                    
+                    <div class="float-start " style="margin-left: 10px;">
+                        <h3 style="padding:0;">{{ item.item_name }}</h3>
+                        <b>Price: £{{ item.price }}</b> <br> <b>Quantity: {{ item.quantity }}</b>
+                        <button class="btn btn-warning btn-sm ms-2" @click="deductItemQty(item)">Remove Quantity</button>
+                        <button class="btn btn-danger btn-sm ms-2" @click="removeItem(item)">Remove Item</button>
+                    </div>
+                </li>
+            </ul>
+
+           
+
+            <div class="input-group input-group-md mb-3 mt-3">
+                <span class="input-group-text bg-dark text-light" id="inputGroup-sizing-sm">Your Name</span>
+                <input type="text" class="form-control" v-model="user_details.name" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+            </div>
+
+            <div class="input-group input-group-md mb-3">
+                <span class="input-group-text bg-dark text-light" id="inputGroup-sizing-sm">Your Contact No.</span>
+                <input type="number" class="form-control" v-model="user_details.phone_number" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+            </div>
+            
+            <div class="bg-light">
+                <h4>Your name: {{ user_details.name }}</h4>
+                <h4>Your number: {{ user_details.phone_number }}</h4>
+            </div>
+
+        </div>
+    </div>
+
+    <hr>
+    <h5 class="text-center">{{ sitename }} - CST3145 CW1</h5>
+    </div>
+<script>
+    let VueApp = new Vue({
+            el: '#VueApp',
+            data: {
+                sitename: 'After School Vue App',
+                message: 'Hello, Vue!',
+                sortOrder: 'asc',
+                sortBy: 'name',
+                basketVisibility: true,
+                search: '',
+                searchResults: [],
+                showSearchResults: false,
+                items: Items, 
+                basket: [],
+                user_details: [ {
+                    name: "",
+                    phone_number: ""
+                } ],
+                
+            },
+            methods: {
+                toggleVisibility() {
+                    this.basketVisibility = !this.basketVisibility;
+                },
+                onKeyUp() {
+                    this.searchResults = this.items.filter(item =>
+                    item.item_name.toLowerCase().includes(this.search.toLowerCase())
+                );
+                    this.showSearchResults = this.searchResults.length > 0 && this.search.trim() !== '';
+
+                    this.itemsToShow = this.showSearchResults ? this.searchResults : this.items;
+                },
+                AddToBasket(item) {
+                    // Find item By ID
+                    const itmIndex = this.basket.findIndex(basketItem => basketItem.id === item.id);
+
+                        // get total availability
+                    const CheckItemQty = this.items.findIndex(i => i.id === item.id);
+                        // check if same item in basket
+                    if (CheckItemQty !== -1 && this.items[CheckItemQty].qty > 0) {
+                        if (itmIndex !== -1) {
+                            // Item is already in basket, add qty
+                            this.basket[itmIndex].quantity++;
+                        } else {
+                            this.basket.push({
+                                id: item.id,
+                                item_image: item.item_image,
+                                item_name: item.item_name,
+                                price: item.price,
+                                quantity: 1,
+                            });
+                        }
+                        this.items[CheckItemQty].qty--;
+                    }
+                },
+                deductItemQty(item) {
+                    // Find itemm By ID
+                    const itmIndex = this.basket.findIndex(basketItem => basketItem.id === item.id);
+
+                    // reduce Qty from basket // > increase qty in items
+                    if (itmIndex !== -1) {
+                        // Reduce quantity From basket 
+                        if (this.basket[itmIndex].quantity > 1) {
+                            this.basket[itmIndex].quantity--;
+                        } else {
+                            // If 0, remove item from basket
+                            this.basket.splice(itmIndex, 1);
+                        }
+                        // Increase the availability
+                        const CheckItemQty = this.items.findIndex(i => i.id === item.id);
+                        this.items[CheckItemQty].qty++;
+
+                        console.log(`Reduced quantity of ${item.item_name} in the basket.`);
+                    }
+                },
+                removeItem(item) {
+                    // Find the index of the item in the basket array
+                    const itmIndex = this.basket.findIndex(basketItem => basketItem.id === item.id);
+
+                    // Increase the availability
+                    const CheckItemQty = this.items.findIndex(i => i.id === item.id);
+                    this.items[CheckItemQty].qty += this.basket[itmIndex].quantity;
+
+                    // Remove the selected item from the basket
+                    this.basket.splice(itmIndex, 1);
+
+                    console.log(`Removed ${item.item_name} from the basket.`);
+                },
+                sortByName() {
+                    this.sortItems('name');
+                },
+                sortByPrice() {
+                    this.sortItems('price');
+                },
+                sortByLocation() {
+                    this.sortItems('location');
+                },
+                sortByQty() {
+                    this.sortItems('qty');
+                },
+                sortItems(sortBy) {
+                    const order = this.sortOrder === 'asc' ? 1 : -1;
+
+                    switch (sortBy) {
+                        case 'name':
+                            this.items.sort((a, b) => order * a.item_name.localeCompare(b.item_name));
+                            break;
+                        case 'location':
+                            this.items.sort((a, b) => order * a.location.localeCompare(b.location));
+                            break;
+                        case 'qty':
+                            this.items.sort((a, b) => order * (a.qty - b.qty));
+                            break;
+                        case 'price':
+                            this.items.sort((a, b) => order * (a.price - b.price));
+                            break;
+                        default:
+                            break;
+                    }
+                },
+            },
+            watch: {
+                sortOrder: function(newSortOrder) {
+                    // Watch for changes in sortOrder and trigger sorting
+                    this.sortItems(this.sortBy);
+                },
+            },
+            computed: {
+                BasketHasNothing() {
+                    return this.basket.length === 0;
+                },
+            },
+        });
+</script>
+</body>
+</html>

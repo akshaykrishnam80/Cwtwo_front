@@ -1,0 +1,33 @@
+#WebApp {
+padding: 20px;
+}
+.lessons-box{
+    padding: 12px 10px 0 10px;
+    margin: 10px;
+    border: 2px solid black;
+    border-radius: 15px;
+    background-color:rgb(238, 238, 238);
+}
+ul.cart-item {
+    margin:0;
+    padding: 0;
+}
+.cart-item h5{
+    margin:0;
+    padding:0;
+}
+.cart-item li{
+    list-style-type: none;
+    padding:0;
+    margin: 0;
+    padding:10px;
+    margin-top: 10px;
+    border-radius: 13px;
+    border: 2px solid black;
+}
+.user-dets{
+    background-color: rgb(238, 236, 233);
+    padding: 20px;
+    
+    border-radius: 13px;
+}
